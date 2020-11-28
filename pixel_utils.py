@@ -74,7 +74,7 @@ def twinkle_alpha_increment(alphas):
     for i in range(len(alphas)):
         __current_alpha = alphas[i][0]
         __current_direction_up = alphas[i][1]
-       new_alphas.append(alpha_increment(__current_alpha, __current_direction_up))
+        new_alphas.append(alpha_increment(__current_alpha, __current_direction_up))
     return new_alphas
 
 def alpha_increment(alpha, up):
