@@ -335,7 +335,8 @@ def led_loop(led_config_proxy, thread_id):
             elif mode == 'fade' and len(colors) > 0:
                 c = colors[_current_colors_index]
                 f = (c[0] * _current_alpha[0], c[1] * _current_alpha[0], c[2] * _current_alpha[0])
-                pixels.fill(f)pixels.show()
+                pixels.fill(f)
+                pixels.show()
                 _current_alpha = pixel_utils.alpha_increment(_current_alpha)
                 if (_current_alpha[0] == 0):
                     _current_colors_index = increment_loop(_current_colors_index, len(colors)-1)
