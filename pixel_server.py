@@ -380,7 +380,8 @@ def led_loop(led_config_proxy, thread_id):
             elif mode == 'heartbeat' and len(colors) > 0:
                 c = colors[_current_colors_index]
                 f = (c[0] * heartbeat[_current_pixel_index], c[1] * heartbeat[_current_pixel_index], c[2] * heartbeat[_current_pixel_index])
-                pixels.fill(f)pixels.show()
+                pixels.fill(f)
+                pixels.show()
                 _current_pixel_index = increment_loop(_current_pixel_index, len(heartbeat)-1)
                 if (_current_pixel_index == 0):
                     _current_colors_index = increment_loop(_current_colors_index, len(colors)-1)
@@ -389,7 +390,8 @@ def led_loop(led_config_proxy, thread_id):
             elif mode == 'creepy' and len(colors) > 0:
                 c = colors[_current_colors_index]
                 f = (c[0] * creepy[_current_pixel_index], c[1] * creepy[_current_pixel_index], c[2] * creepy[_current_pixel_index])
-                pixels.fill(f)pixels.show()
+                pixels.fill(f)
+                pixels.show()
                 _current_pixel_index = increment_loop(_current_pixel_index, len(creepy)-1)
                 if (_current_pixel_index == 0):
                     _current_colors_index = increment_loop(_current_colors_index, len(colors)-1)
