@@ -337,7 +337,7 @@ def led_loop(led_config_proxy, thread_id):
                 f = (c[0] * _current_alpha[0], c[1] * _current_alpha[0], c[2] * _current_alpha[0])
                 pixels.fill(f)
                 pixels.show()
-                _current_alpha = pixel_utils.alpha_increment(_current_alpha)
+                _current_alpha = pixel_utils.alpha_increment(_current_alpha[0], _current_alpha[1])
                 if (_current_alpha[0] == 0):
                     _current_colors_index = increment_loop(_current_colors_index, len(colors)-1)
                     if _current_colors_index == 0:
