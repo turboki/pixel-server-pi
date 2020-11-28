@@ -256,6 +256,9 @@ def led_loop(led_config_proxy, thread_id):
     pixels = neopixel.NeoPixel(board.D18, 450, brightness=0.2, auto_write=False, pixel_order=neopixel.RGB)
     pixels.fill((255,255,255))
     pixels.show()
+    heartbeat = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+    creepy = [0.1, 0.2, 0.1, 0.2, 0.3, 0, 0.1, 0.5, 0.4, 0.2, 0.1, 0.3, 0.1, 0.3, 0.1, 0.3, 0.9, 1, 0.9, 0.1, 1, 0.3, 0.1, 0.2, 0.3, 0, 0.1, 0.5]
+
     _current_mode = 'rainbow'
     _current_colors = [(0,0,0)]
     _current_brightness = 0.2
@@ -269,12 +272,13 @@ def led_loop(led_config_proxy, thread_id):
     _current_rgb_index = 0
     _current_pixel_index = 0
     _current_colors_index = 0
+    _current_alpha = (0,True)
     while True:
         done = led_config_proxy.get_done()
         running = led_config_proxy.get_running()
         brightness = led_config_proxy.get_brightness()
         if (done):
-            break;
+            break
         steps = led_config_proxy.get_steps()
         if steps != _current_steps:
             _current_steps = steps
@@ -306,6 +310,7 @@ def led_loop(led_config_proxy, thread_id):
             _current_rgb_index = 0
             _current_pixel_index = 0
             _current_colors_index = 0
+            _current_alpha = (0, True)
 
         if _current_brightness != brightness:
             _current_brightness = brightness
@@ -327,6 +332,15 @@ def led_loop(led_config_proxy, thread_id):
                 _current_colors_index = increment_loop(_current_colors_index, len(colors)-1)
                 if _current_colors_index == 0:
                     _current_loop += 1
+            elif mode == 'fade' and len(colors) > 0:
+                c = colors[_current_colors_index]
+                f = (c[0] * _current_alpha[0], c[1] * _current_alpha[0], c[2] * _current_alpha[0])
+                pixels.fill(f)pixels.show()
+                _current_alpha = pixel_utils.alpha_increment(_current_alpha)
+                if (_current_alpha[0] == 0):
+                    _current_colors_index = increment_loop(_current_colors_index, len(colors)-1)
+                    if _current_colors_index == 0:
+                        _current_loop += 1
             elif mode == "chase":
                 if (len(colors) > 0):
                     pixel_utils.color_chase(pixels, _current_pixel_index, colors[_current_colors_index])
@@ -362,6 +376,24 @@ def led_loop(led_config_proxy, thread_id):
                     _current_loop += 1
             elif mode == "wave":
                 print()
+            elif mode == 'heartbeat' and len(colors) > 0:
+                c = colors[_current_colors_index]
+                f = (c[0] * heartbeat[_current_pixel_index], c[1] * heartbeat[_current_pixel_index], c[2] * heartbeat[_current_pixel_index])
+                pixels.fill(f)pixels.show()
+                _current_pixel_index = increment_loop(_current_pixel_index, len(heartbeat)-1)
+                if (_current_pixel_index == 0):
+                    _current_colors_index = increment_loop(_current_colors_index, len(colors)-1)
+                    if _current_colors_index == 0:
+                        _current_loop += 1
+            elif mode == 'creepy' and len(colors) > 0:
+                c = colors[_current_colors_index]
+                f = (c[0] * creepy[_current_pixel_index], c[1] * creepy[_current_pixel_index], c[2] * creepy[_current_pixel_index])
+                pixels.fill(f)pixels.show()
+                _current_pixel_index = increment_loop(_current_pixel_index, len(creepy)-1)
+                if (_current_pixel_index == 0):
+                    _current_colors_index = increment_loop(_current_colors_index, len(colors)-1)
+                    if _current_colors_index == 0:
+                        _current_loop += 1
             else:
                 pixel_utils.off(pixels)
             time.sleep(wait_time)

@@ -74,17 +74,22 @@ def twinkle_alpha_increment(alphas):
     for i in range(len(alphas)):
         __current_alpha = alphas[i][0]
         __current_direction_up = alphas[i][1]
-        if __current_direction_up:
-            if __current_alpha >= 0.95:
-                new_alphas.append((1, False))
-            else:
-                new_alphas.append((__current_alpha + 0.05, True))
-        else:
-            if __current_alpha <= 0.05:
-                new_alphas.append((0, True))
-            else:
-                new_alphas.append((__current_alpha - 0.05, False))
+       new_alphas.append(alpha_increment(__current_alpha, __current_direction_up))
     return new_alphas
+
+def alpha_increment(alpha, up):
+    new_alpha = (0, True)
+    if up:
+        if alpha >= 0.95:
+            new_alpha = (1, False)
+        else:
+            new_alpha = (alpha + 0.05, True)
+    else:
+        if alpha <= 0.05:
+            new_alpha = (0, True)
+        else:
+            new_alpha = (alpha - 0.05, False)
+    return new_alpha
 
 def color_chase(pixels, index, color):
     pixels[index] = color
