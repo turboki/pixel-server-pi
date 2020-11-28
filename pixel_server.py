@@ -334,7 +334,7 @@ def led_loop(led_config_proxy, thread_id):
                     _current_loop += 1
             elif mode == 'fade' and len(colors) > 0:
                 c = colors[_current_colors_index]
-                f = (c[0] * _current_alpha[0], c[1] * _current_alpha[0], c[2] * _current_alpha[0])
+                f = (round(c[0] * _current_alpha[0]), round(c[1] * _current_alpha[0]), round(c[2] * _current_alpha[0]))
                 pixels.fill(f)
                 pixels.show()
                 _current_alpha = pixel_utils.alpha_increment(_current_alpha[0], _current_alpha[1])
@@ -379,7 +379,7 @@ def led_loop(led_config_proxy, thread_id):
                 print()
             elif mode == 'heartbeat' and len(colors) > 0:
                 c = colors[_current_colors_index]
-                f = (c[0] * heartbeat[_current_pixel_index], c[1] * heartbeat[_current_pixel_index], c[2] * heartbeat[_current_pixel_index])
+                f = (round(c[0] * heartbeat[_current_pixel_index]), round(c[1] * heartbeat[_current_pixel_index]), round(c[2] * heartbeat[_current_pixel_index]))
                 pixels.fill(f)
                 pixels.show()
                 _current_pixel_index = increment_loop(_current_pixel_index, len(heartbeat)-1)
@@ -389,7 +389,7 @@ def led_loop(led_config_proxy, thread_id):
                         _current_loop += 1
             elif mode == 'creepy' and len(colors) > 0:
                 c = colors[_current_colors_index]
-                f = (c[0] * creepy[_current_pixel_index], c[1] * creepy[_current_pixel_index], c[2] * creepy[_current_pixel_index])
+                f = (round(c[0] * creepy[_current_pixel_index]), round(c[1] * creepy[_current_pixel_index]), round(c[2] * creepy[_current_pixel_index]))
                 pixels.fill(f)
                 pixels.show()
                 _current_pixel_index = increment_loop(_current_pixel_index, len(creepy)-1)
