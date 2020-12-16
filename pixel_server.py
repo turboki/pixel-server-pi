@@ -24,7 +24,7 @@ class PixelConfig(object):
         self._colors = [(255,0,0)]
         self._wait_time = 0.001
         self._brightness = 0.2
-        self._steps = None
+        self._steps = "default"
 
     def get_steps(self):
         return self._steps
@@ -253,7 +253,11 @@ def parse_step(step = ''):
     }
 
 def led_loop(led_config_proxy, thread_id):
-    pixels = neopixel.NeoPixel(board.D18, 450, brightness=0.2, auto_write=False, pixel_order=neopixel.RGB)
+    # Tree
+    # pixels = neopixel.NeoPixel(board.D18, 50, brightness=0.3, auto_write=False, pixel_order=neopixel.RGB)
+    
+    # House
+    pixels = neopixel.NeoPixel(board.D18, 450, brightness=0.3, auto_write=False, pixel_order=neopixel.RGB)
     pixels.fill((255,255,255))
     pixels.show()
     heartbeat = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
@@ -262,8 +266,28 @@ def led_loop(led_config_proxy, thread_id):
     _current_mode = 'rainbow'
     _current_colors = [(0,0,0)]
     _current_brightness = 0.2
-    _current_steps = None
-    _current_steps_list = []
+    _current_steps = "default"
+    
+    # Tree
+    # _current_steps_list = [
+    #     {'mode':'marquee','loop':10, 'wait': 0.1, 'colors':[(255,0,0),(255,255,255),(255,0,0),(255,255,255),(255,0,0),(255,255,255)]},
+    #     {'mode':'fade','loop':1, 'wait': 0.01, 'colors':[(255,255,255)]},
+    #     {'mode':'twinkle','loop':1, 'wait': 0.1, 'colors':[(255,0,0),(255,255,255)]},
+    #     {'mode':'fade','loop':1, 'wait': 0.01, 'colors':[(255,255,255)]},
+    #     {'mode':'twinkle','loop':1, 'wait': 0.1, 'colors':[(0,255,0),(255,255,255)]},
+    #     {'mode':'fade','loop':1, 'wait': 0.01, 'colors':[(255,255,255)]},
+    #     {'mode':'twinkle','loop':1, 'wait': 0.1, 'colors':[(0,0,255),(255,255,255)]},
+    #     {'mode':'fade','loop':1, 'wait': 0.01, 'colors':[(255,255,255)]},
+    # ]
+    
+    # House
+    _current_steps_list = [
+        {'mode':'marquee','loop':10, 'wait': 0.01, 'colors':[(255,0,0),(255,255,255),(255,0,0),(255,255,255),(255,0,0),(255,255,255)]},
+        {'mode':'fade','loop':10, 'wait': 0.01, 'colors':[(255,0,0),(0,255,0),(255,255,0),(0,0,255)]},
+        {'mode':'twinkle','loop':10, 'wait': 0.1, 'colors':[(255,0,0),(255,255,0),(0,255,0),(0,0,255)]},
+        {'mode':'twinkle_adv','loop':10, 'wait': 0.001, 'colors':[(255,255,255),(0,255,255),(0,0,255)]},
+        {'mode':'chase', 'loop':5, 'wait': 0.001, 'colors': [(255,0,0),(255,255,255)]}
+    ]
     _current_loop = 0
     _current_step = 0
 
@@ -425,31 +449,33 @@ class ModeController(tornado.web.RequestHandler):
         steps = self.get_argument('steps',None, True)
         self.pixel_config.set_steps(steps)
         mutations = {}
-        if running == 'false':
-            self.pixel_config.set_running(False)
-            mutations['running'] = False
-        elif running == 'true':
-            self.pixel_config.set_running(True)
-            mutations['running'] = True
-        if mode != None:
-            mutations['mode'] = mode
-            self.pixel_config.set_mode(mode)
-        if colors != None:
-            rgb_colors = get_colors(colors)
-            mutations['colors'] = rgb_colors
-            self.pixel_config.set_colors(rgb_colors)
-        if wait != None:
-            try:
-                mutations['wait'] = float(wait)
-                self.pixel_config.set_wait_time(float(wait))
-            except:
-                pass
         if brightness != None:
             try:
                 mutations['brightness'] = float(brightness)
                 self.pixel_config.set_brightness(float(brightness))
             except:
                 pass
+        else: 
+            if running == 'false':
+                self.pixel_config.set_running(False)
+                mutations['running'] = False
+            elif running == 'true':
+                self.pixel_config.set_running(True)
+                mutations['running'] = True
+            if mode != None:
+                mutations['mode'] = mode
+                self.pixel_config.set_mode(mode)
+            if colors != None:
+                rgb_colors = get_colors(colors)
+                mutations['colors'] = rgb_colors
+                self.pixel_config.set_colors(rgb_colors)
+            if wait != None:
+                try:
+                    mutations['wait'] = float(wait)
+                    self.pixel_config.set_wait_time(float(wait))
+                except:
+                    pass
+                    
         self.finish(mutations)
 
 
